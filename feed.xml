@@ -30,8 +30,37 @@ permalink: /feed.xml
     {% endunless %}
   {% endunless %}
 
+  {% assign esp = post.especie | upcase %}
+  {% assign niv = post.nivel_alerta | upcase %}
+  {% assign loc = local_final | upcase %}
+
+  {% assign title_parts = "" %}
+  {% if post.especie != "" and post.especie != nil %}
+    {% assign title_parts = esp %}
+  {% endif %}
+
+  {% if post.nivel_alerta != "" and post.nivel_alerta != nil %}
+    {% if title_parts != "" %}
+      {% assign title_parts = title_parts | append: " - " | append: niv %}
+    {% else %}
+      {% assign title_parts = niv %}
+    {% endif %}
+  {% endif %}
+
+  {% if local_final != "" and local_final != nil %}
+    {% if title_parts != "" %}
+      {% assign title_parts = title_parts | append: " - " | append: loc %}
+    {% else %}
+      {% assign title_parts = loc %}
+    {% endif %}
+  {% endif %}
+
+  {% if title_parts == "" %}
+    {% assign title_parts = "ALERTA" %}
+  {% endif %}
+
   <entry>
-    <title>{{ post.especie | default: "Animal" | upcase }} - {{ post.nivel_alerta | default: "DESCONHECIDO" | upcase }} - {{ local_final | upcase }}</title>
+    <title>{{ title_parts | xml_escape }}</title>
     <link href="{{ post.url | absolute_url }}" rel="alternate" type="text/html"/>
     <published>{% if post.data_ocorrencia_inicial != "" and post.data_ocorrencia_inicial != nil %}{{ post.data_ocorrencia_inicial | date: "%Y-%m-%dT00:00:00Z" }}{% else %}{{ post.date | date_to_xmlschema }}{% endif %}</published>
     <updated>{{ post.date | date_to_xmlschema }}</updated>
