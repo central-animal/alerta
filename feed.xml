@@ -38,16 +38,16 @@ permalink: /feed.xml
     <id>{{ post.url | absolute_url }}</id>
     <summary type="html"><![CDATA[{{ post.estado_fisico }} — Situação: {{ post.situacao }} | {{ post.observacoes | strip_html | truncate: 120 }}]]></summary>
     <content type="html"><![CDATA[
+      {% if post.imagem != "" and post.imagem != nil %}
+      <p><img src="{% if post.imagem contains 'http' %}{{ post.imagem }}{% else %}{{ site.url }}{{ site.baseurl }}{{ post.imagem }}{% endif %}" alt="Fotografia do animal" /></p>
+      {% endif %}
+
       <p><strong>Estado Físico:</strong> {{ post.estado_fisico }}<br />
       <strong>Situação:</strong> {{ post.situacao }}</p>
       
       {% if post.observacoes != "" and post.observacoes != nil %}
       <p><strong>Detalhes:</strong><br />
       {{ post.observacoes }}</p>
-      {% endif %}
-
-      {% if post.imagem != "" and post.imagem != nil %}
-      <p><img src="{{ post.imagem }}" alt="Imagem da Ocorrência" /></p>
       {% endif %}
 
       <p><a href="{{ post.url | absolute_url }}">Ver ocorrência completa no site</a><br />
